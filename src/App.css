@@ -1,18 +1,29 @@
 .App {
-
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
-.todoList {
-  width: 500px;
-  margin: 0 auto;
+.addListItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.todoList > div {
-  padding: 10px;
+.addListItem h3,
+.todoList-newItemForm input{
+    margin-right: 10px;
 }
 
-.todoList-task {
+.TodoList {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.TodoList > div {
+    padding: 10px;
 }
 
 .filter-active {

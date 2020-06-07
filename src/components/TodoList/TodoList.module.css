@@ -1,0 +1,12 @@
+
+.todoListHeader {
+    display: flex;
+    flex-direction: column;
+}
+
+.TodoListTitleWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+

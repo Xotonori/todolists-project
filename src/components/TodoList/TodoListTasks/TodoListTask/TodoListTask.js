@@ -1,15 +1,35 @@
 import React from 'react';
 import DeleteItem from "../../../DeleteItem/DeleteItem";
-import classes from './TodoListTask.module.css'
+import classes from './TodoListTask.module.css';
+import axios from "axios";
+import {ROOT_URL, serverAccess} from "../../../../redux/store";
 
 class TodoListTask extends React.Component {
 
     state = {
-        isEditMode: false
+        isEditMode: false,
+        title: this.props.task.title
     };
 
     deleteTask = () => {
-        this.props.deleteTask(this.props.todolistId, this.props.task.id)
+        axios.delete(
+            `${ROOT_URL}/${this.props.todolistId}/tasks/${this.props.task.id}`,
+            serverAccess
+        )
+            .then(res => {
+                this.props.deleteTask(this.props.todolistId, this.props.task.id)
+            });
+    };
+
+    updateTask = (obj) => {
+        axios.put(
+            `${ROOT_URL}/${this.props.todolistId}/tasks/${this.props.task.id}`,
+            {...this.props.task, ...obj},
+            serverAccess
+        )
+            .then(res => {
+                this.props.changeTask(this.props.task.id, {...res.data.data.item})
+            });
     };
 
     activatedEditMode = () => {
@@ -17,7 +37,8 @@ class TodoListTask extends React.Component {
     };
 
     deActivatedEditMode = () => {
-        this.setState({isEditMode: false})
+        this.setState({isEditMode: false});
+        this.updateTask({title: this.state.title})
     };
 
     setChangeByEnter = (e) => {
@@ -27,29 +48,30 @@ class TodoListTask extends React.Component {
     };
 
     onIsDoneChanged = (e) => {
-        this.props.changeTask(this.props.task.id, {isDone: e.currentTarget.checked})
+        let status = e.currentTarget.checked ? 2 : 0;
+        this.updateTask({status: status});
     };
 
     onTitleChanged = (e) => {
-        this.props.changeTask(this.props.task.id, {title: e.currentTarget.value})
+        this.setState({title: e.currentTarget.value});
     };
 
     render() {
-        let taskIsDoneClass = this.props.task.isDone ? 'todoList-task done' : 'todoList-task';
-
+        let status = this.props.task.status !== 0;
+        let taskIsDoneClass = status ? 'todoList-task done' : 'todoList-task';
         return (
             <div className={classes.Task}>
                 <div className={taskIsDoneClass}>
                     <input
                         type="checkbox"
-                        checked={this.props.task.isDone}
+                        checked={status}
                         onChange={this.onIsDoneChanged}
                     />
 
                     {this.state.isEditMode
                         ?
                         <input
-                            value={this.props.task.title}
+                            value={this.state.title}
                             onKeyPress={this.setChangeByEnter}
                             autoFocus={true}
                             onBlur={this.deActivatedEditMode}
@@ -66,7 +88,6 @@ class TodoListTask extends React.Component {
             </div>
         )
     }
-
 }
 
 export default TodoListTask;

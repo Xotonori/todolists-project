@@ -1,7 +1,7 @@
 import React from 'react';
 
 class DeleteItem extends React.Component {
-   render = () => {
+   render(){
        return (
            <div className="DeleteItem">
                <button onClick={this.props.deleteItem}>

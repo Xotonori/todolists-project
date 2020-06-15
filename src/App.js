@@ -3,28 +3,47 @@ import './App.css';
 import TodoList from "./components/TodoList/TodoList";
 import AddNewItemForm from "./components/AddNewItemForm/AddNewItemForm";
 import {connect} from 'react-redux'
-import {createTodolistAC, deleteTodolistAC} from "./redux/todolistsReducer";
+import {addTodolistAC, deleteTodolistAC, setTodolistsAC} from "./redux/todolistsReducer";
+import axios from 'axios';
+import {ROOT_URL, serverAccess} from "./redux/store";
 
 
 class App extends Component {
 
-
-    addListItem = (newTitle) => {
-
-        let newListItem = {
-            id: (new Date()).getTime(),
-            title: newTitle,
-            tasks: []
-        };
-
-        this.props.createTodolist(newListItem);
+    addListItem = (title) => {
+        axios.post(
+            ROOT_URL,
+            {title},
+            serverAccess
+        )
+            .then(res => {
+                let todolist = res.data.data.item;
+                this.props.addTodolist(todolist)
+            })
     };
 
     deleteListItem = (todolistId) => {
-        this.props.deleteTodolist(todolistId);
+        axios.delete(
+            `${ROOT_URL}/${todolistId}`,
+            serverAccess
+        )
+            .then(res => {
+                if(res.data.resultCode === 0) {
+                    this.props.deleteTodolist(todolistId)
+                }
+            })
     };
 
+    componentDidMount() {
+        this.restoreState();
+    }
 
+    restoreState = () => {
+        axios.get(ROOT_URL, serverAccess)
+            .then(res => {
+                this.props.setTodolists(res.data);
+            });
+    };
 
     render() {
         return (
@@ -36,6 +55,7 @@ class App extends Component {
                 <div className={'App'}>
                     {this.props.todolists.map(item => (
                         <TodoList
+                            key={item.id}
                             id={item.id}
                             title={item.title}
                             tasks={item.tasks}
@@ -57,8 +77,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
 
-    createTodolist: newListItem => {
-        dispatch(createTodolistAC(newListItem))
+    setTodolists: (todolists) => {
+        dispatch(setTodolistsAC(todolists));
+    },
+
+    addTodolist: newListItem => {
+        dispatch(addTodolistAC(newListItem))
     },
 
     deleteTodolist: todolistId => {

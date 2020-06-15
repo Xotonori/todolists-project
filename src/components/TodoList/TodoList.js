@@ -4,9 +4,11 @@ import TodoListTasks from "./TodoListTasks/TodoListTasks"
 import TodoListFooter from "./TodoListFooter/TodoListFooter"
 import TodoListTitle from "./TodoListTitle/TodoListTitle";
 import AddNewItemForm from "../AddNewItemForm/AddNewItemForm";
-import {addTaskAC, changeTaskAC, deleteTaskAC} from '../../redux/todolistsReducer'
+import {addTaskAC, changeTaskAC, deleteTaskAC, setTasksAC} from '../../redux/todolistsReducer'
 import {connect} from "react-redux";
 import DeleteItem from "../DeleteItem/DeleteItem";
+import axios from "axios";
+import {ROOT_URL, serverAccess} from "../../redux/store";
 
 class TodoList extends Component {
 
@@ -14,16 +16,16 @@ class TodoList extends Component {
         filterValue: "All",
     };
 
-    addTask = (newTitle) => {
-
-        let newTask = {
-            id: (new Date()).getTime(),
-            title: newTitle,
-            isDone: false,
-            priority: 'low'
-        };
-
-        this.props.addTask(this.props.id, newTask);
+    addTask = (title) => {
+        axios.post(
+            `${ROOT_URL}/${this.props.id}/tasks`,
+            {title},
+            serverAccess
+        )
+            .then(res => {
+                let task = res.data.data.item;
+                this.props.addTask(this.props.id, task);
+            })
     };
 
     deleteTodoList = () => {
@@ -38,14 +40,31 @@ class TodoList extends Component {
         this.props.changeTask(this.props.id, taskId, obj)
     };
 
+    componentDidMount() {
+        this.restoreState();
+    }
+
+    restoreState = () => {
+        axios.get(
+            `${ROOT_URL}/${this.props.id}/tasks`,
+            serverAccess
+        )
+            .then(res => {
+                let allTasks = res.data.items;
+                this.props.setTasks(allTasks, this.props.id);
+            });
+    };
+
     render() {
-        let filteredTasks = this.props.tasks.filter(task => {
+        let {tasks = []} = this.props;
+
+        let filteredTasks = tasks.filter(task => {
 
             switch (this.state.filterValue) {
                 case 'Active':
-                    return !task.isDone;
+                    return !task.status;
                 case 'Completed':
-                    return task.isDone;
+                    return task.status;
                 default:
                     return true;
             }
@@ -80,6 +99,10 @@ class TodoList extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        setTasks: (tasks, todolistId) => {
+            dispatch(setTasksAC(tasks, todolistId));
+        },
+
         addTask: (todolistId, newTask) => {
             dispatch(addTaskAC(todolistId, newTask));
         },

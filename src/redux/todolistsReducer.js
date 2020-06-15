@@ -3,44 +3,36 @@ export const DELETE_TODOLIST = 'TodoApp/TodolistReducer/DELETE_TODOLIST';
 export const ADD_TASK = 'TodoApp/TodolistReducer/ADD_TASK';
 export const CHANGE_TASK = 'TodoApp/TodolistReducer/CHANGE_TASK';
 export const DELETE_TASK = 'TodoApp/TodolistReducer/DELETE_TASK';
+export const SET_TODOLIST = 'TodoApp/TodolistReducer/SET_TODOLIST';
+export const SET_TASKS = 'TodoApp/TodolistReducer/SET_TASKS';
 
 const initialState = {
-    todolists: [
-        {
-            id: 0, title: 'TodoList', tasks: [
-                {id: 0, title: 'ReactJs', isDone: false, priority: 'low'},
-                {id: 1, title: 'CSS', isDone: false, priority: 'low'},
-                {id: 2, title: 'JS', isDone: false, priority: 'high'},
-                {id: 3, title: 'jQuery', isDone: true, priority: 'medium'},
-                {id: 4, title: 'Patterns', isDone: true, priority: 'low'},
-                {id: 5, title: 'PHP', isDone: false, priority: 'low'},
-            ]
-        },
-        {
-            id: 1, title: 'Codewars', tasks: [
-                {id: 0, title: 'ReactJs', isDone: false, priority: 'low'},
-                {id: 1, title: 'CSS', isDone: false, priority: 'low'},
-                {id: 2, title: 'JS', isDone: false, priority: 'high'},
-                {id: 3, title: 'jQuery', isDone: true, priority: 'medium'},
-                {id: 4, title: 'Patterns', isDone: true, priority: 'low'},
-                {id: 5, title: 'PHP', isDone: false, priority: 'low'},
-            ]
-        },
-        {
-            id: 2, title: 'React JS', tasks: [
-                {id: 0, title: 'ReactJs', isDone: false, priority: 'low'},
-                {id: 1, title: 'CSS', isDone: false, priority: 'low'},
-                {id: 2, title: 'JS', isDone: false, priority: 'high'},
-                {id: 3, title: 'jQuery', isDone: true, priority: 'medium'},
-                {id: 4, title: 'Patterns', isDone: true, priority: 'low'},
-                {id: 5, title: 'PHP', isDone: false, priority: 'low'},
-            ]
-        },
-    ]
+    todolists: []
 };
 
 const todolistsReducer = (state = initialState, action) => {
     switch (action.type) {
+
+        case SET_TODOLIST:
+            return {
+                ...state,
+                todolists: action.todoLists.map(tl => ({...tl, tasks: []}))
+            };
+
+        case SET_TASKS:
+            return {
+                ...state,
+                todolists: state.todolists.map(todo => {
+                    if (todo.id !== action.todolistId) {
+                        return todo
+                    } else {
+                        return {
+                            ...todo,
+                            tasks: [...action.tasks]
+                        }
+                    }
+                })
+            };
 
         case ADD_TODOLIST:
             return {
@@ -96,7 +88,7 @@ const todolistsReducer = (state = initialState, action) => {
                                 if (task.id !== action.taskId) {
                                     return task
                                 } else {
-                                    return {...task, ...action.obj}
+                                    return {...action.obj}
                                 }
                             })
                         }
@@ -111,7 +103,9 @@ const todolistsReducer = (state = initialState, action) => {
     }
 };
 
-export const createTodolistAC = (newTodoList) => ({type: ADD_TODOLIST, newTodoList});
+export const setTodolistsAC = (todoLists) => ({type: SET_TODOLIST, todoLists});
+export const setTasksAC = (tasks, todolistId) => ({type: SET_TASKS, tasks, todolistId});
+export const addTodolistAC = (newTodoList) => ({type: ADD_TODOLIST, newTodoList});
 export const deleteTodolistAC = (todolistId) => ({type: DELETE_TODOLIST, todolistId});
 export const addTaskAC = (todolistId, newTask) => ({type: ADD_TASK, todolistId, newTask});
 export const deleteTaskAC = (todolistId, taskId) => ({type: DELETE_TASK, todolistId, taskId});

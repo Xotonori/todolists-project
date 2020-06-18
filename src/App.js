@@ -4,31 +4,22 @@ import TodoList from "./components/TodoList/TodoList";
 import AddNewItemForm from "./components/AddNewItemForm/AddNewItemForm";
 import {connect} from 'react-redux'
 import {addTodolistAC, deleteTodolistAC, setTodolistsAC} from "./redux/todolistsReducer";
-import axios from 'axios';
-import {ROOT_URL, serverAccess} from "./redux/store";
-
+import {api} from "./redux/api";
 
 class App extends Component {
 
     addListItem = (title) => {
-        axios.post(
-            ROOT_URL,
-            {title},
-            serverAccess
-        )
+        api.createTodolist(title)
             .then(res => {
-                let todolist = res.data.data.item;
+                let todolist = res.item;
                 this.props.addTodolist(todolist)
             })
     };
 
     deleteListItem = (todolistId) => {
-        axios.delete(
-            `${ROOT_URL}/${todolistId}`,
-            serverAccess
-        )
+        api.deleteListItem(todolistId)
             .then(res => {
-                if(res.data.resultCode === 0) {
+                if (res.resultCode === 0) {
                     this.props.deleteTodolist(todolistId)
                 }
             })
@@ -39,9 +30,9 @@ class App extends Component {
     }
 
     restoreState = () => {
-        axios.get(ROOT_URL, serverAccess)
+        api.getTodolists()
             .then(res => {
-                this.props.setTodolists(res.data);
+                this.props.getTodolists(res);
             });
     };
 
@@ -50,7 +41,10 @@ class App extends Component {
             <React.Fragment>
                 <div className={'addListItem'}>
                     <h3>New Task:</h3>
-                    <AddNewItemForm addItem={this.addListItem}/>
+                    <AddNewItemForm
+                        addItem={this.addListItem}
+                        placeholder={"New TodoList name"}
+                    />
                 </div>
                 <div className={'App'}>
                     {this.props.todolists.map(item => (
@@ -66,7 +60,6 @@ class App extends Component {
             </React.Fragment>
         )
     }
-
 }
 
 const mapStateToProps = (state) => {
@@ -77,7 +70,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
 
-    setTodolists: (todolists) => {
+    getTodolists: (todolists) => {
         dispatch(setTodolistsAC(todolists));
     },
 

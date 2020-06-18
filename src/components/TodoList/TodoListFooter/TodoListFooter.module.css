@@ -1,0 +1,12 @@
+.TodoListFooter {
+
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+}
+
+.isHidden {
+    cursor: pointer;
+}

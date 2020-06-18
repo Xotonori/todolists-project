@@ -40,6 +40,7 @@ class AddNewItemForm extends Component {
                     onChange={this.onTitleChange}
                     onKeyPress={this.onKeyPress}
                     value={this.state.title}
+                    placeholder={this.props.placeholder}
                 />
                 <button onClick={this.onAddItemClick}>Add</button>
             </div>

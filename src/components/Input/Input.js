@@ -5,7 +5,7 @@ class Input extends Component {
     render() {
         return (
             <input type="text"
-                   placeholder="New task name"
+                   placeholder={this.props.placeholder}
                    className={this.props.errorClass}
                    onChange={this.props.onChange}
                    onKeyPress={this.props.onKeyPress}

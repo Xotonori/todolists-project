@@ -1,8 +1,7 @@
 import React from 'react';
 import DeleteItem from "../../../DeleteItem/DeleteItem";
 import classes from './TodoListTask.module.css';
-import axios from "axios";
-import {ROOT_URL, serverAccess} from "../../../../redux/store";
+import {api} from "../../../../redux/api";
 
 class TodoListTask extends React.Component {
 
@@ -12,23 +11,16 @@ class TodoListTask extends React.Component {
     };
 
     deleteTask = () => {
-        axios.delete(
-            `${ROOT_URL}/${this.props.todolistId}/tasks/${this.props.task.id}`,
-            serverAccess
-        )
+        api.deleteTask(this.props.todolistId, this.props.task.id)
             .then(res => {
                 this.props.deleteTask(this.props.todolistId, this.props.task.id)
             });
     };
 
     updateTask = (obj) => {
-        axios.put(
-            `${ROOT_URL}/${this.props.todolistId}/tasks/${this.props.task.id}`,
-            {...this.props.task, ...obj},
-            serverAccess
-        )
+        api.updateTask(this.props.todolistId, this.props.task.id, {...this.props.task, ...obj})
             .then(res => {
-                this.props.changeTask(this.props.task.id, {...res.data.data.item})
+                this.props.changeTask(this.props.task.id, {...res.item})
             });
     };
 

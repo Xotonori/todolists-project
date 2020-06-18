@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import classes from './TodoListFooter.module.css'
 
 
 class TodoListFooter extends Component {
@@ -31,31 +32,27 @@ class TodoListFooter extends Component {
 
         return (
 
-            <div className="todoList-footer">
+            <div className={classes.TodoListFooter}>
 
                 {!this.state.isHidden &&
-                <div>
-                    <button
-                        className={classForAll}
-                        onClick={this.onAllFilterClick}
+                <div className={classes.filters}>
+                    <button className={classForAll}
+                            onClick={this.onAllFilterClick}
                     >All
                     </button>
-                    <button
-                        className={classForCompleted}
-                        onClick={this.onCompletedFilterClick}
+                    <button className={classForCompleted}
+                            onClick={this.onCompletedFilterClick}
                     >Completed
                     </button>
-                    <button
-                        className={classForActive}
-                        onClick={this.onActiveFilterClick}
+                    <button className={classForActive}
+                            onClick={this.onActiveFilterClick}
                     >Active
                     </button>
-                    <br/>
                 </div>
                 }
 
-                {!this.state.isHidden && <span onClick={this.onShowFiltersClick}> hide </span>}
-                {this.state.isHidden && <span onClick={this.onHideFiltersClick}> show </span>}
+                {!this.state.isHidden && <span onClick={this.onShowFiltersClick} className={classes.isHidden}> hide </span>}
+                {this.state.isHidden && <span onClick={this.onHideFiltersClick} className={classes.isHidden}> show </span>}
             </div>
 
         );

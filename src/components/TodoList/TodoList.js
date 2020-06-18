@@ -4,11 +4,10 @@ import TodoListTasks from "./TodoListTasks/TodoListTasks"
 import TodoListFooter from "./TodoListFooter/TodoListFooter"
 import TodoListTitle from "./TodoListTitle/TodoListTitle";
 import AddNewItemForm from "../AddNewItemForm/AddNewItemForm";
-import {addTaskAC, changeTaskAC, deleteTaskAC, setTasksAC} from '../../redux/todolistsReducer'
+import {addTaskAC, changeTaskAC, changeTodolistTitleAC, deleteTaskAC, setTasksAC} from '../../redux/todolistsReducer'
 import {connect} from "react-redux";
 import DeleteItem from "../DeleteItem/DeleteItem";
-import axios from "axios";
-import {ROOT_URL, serverAccess} from "../../redux/store";
+import {api} from "../../redux/api";
 
 class TodoList extends Component {
 
@@ -17,13 +16,9 @@ class TodoList extends Component {
     };
 
     addTask = (title) => {
-        axios.post(
-            `${ROOT_URL}/${this.props.id}/tasks`,
-            {title},
-            serverAccess
-        )
+        api.addTask(title, this.props.id)
             .then(res => {
-                let task = res.data.data.item;
+                let task = res.item;
                 this.props.addTask(this.props.id, task);
             })
     };
@@ -45,12 +40,9 @@ class TodoList extends Component {
     }
 
     restoreState = () => {
-        axios.get(
-            `${ROOT_URL}/${this.props.id}/tasks`,
-            serverAccess
-        )
+        api.getTasks(this.props.id)
             .then(res => {
-                let allTasks = res.data.items;
+                let allTasks = res.items;
                 this.props.setTasks(allTasks, this.props.id);
             });
     };
@@ -72,13 +64,20 @@ class TodoList extends Component {
         });
 
         return (
-            <div className="TodoList">
+            <div className={classes.TodoList}>
                 <div className={classes.todoListHeader}>
                     <div className={classes.TodoListTitleWrapper}>
-                        <TodoListTitle title={this.props.title}/>
+                        <TodoListTitle
+                            title={this.props.title}
+                            changeTodolistTitle={this.props.changeTodolistTitle}
+                            todolistId={this.props.id}
+                        />
                         <DeleteItem deleteItem={this.deleteTodoList}/>
                     </div>
-                    <AddNewItemForm addItem={this.addTask}/>
+                    <AddNewItemForm
+                        addItem={this.addTask}
+                        placeholder={"New task name"}
+                    />
                 </div>
                 <TodoListTasks
                     tasks={filteredTasks}
@@ -93,9 +92,7 @@ class TodoList extends Component {
             </div>
         );
     }
-
 }
-
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -113,6 +110,10 @@ const mapDispatchToProps = (dispatch) => {
 
         changeTask: (todolistId, taskId, obj) => {
             dispatch(changeTaskAC(todolistId, taskId, obj));
+        },
+
+        changeTodolistTitle: (todolistId, title) => {
+            dispatch(changeTodolistTitleAC(todolistId, title));
         }
     }
 };

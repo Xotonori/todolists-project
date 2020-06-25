@@ -1,9 +1,11 @@
-export const ADD_TODOLIST = 'TodoApp/TodolistReducer/ADD_TODOLIST';
-export const DELETE_TODOLIST = 'TodoApp/TodolistReducer/DELETE_TODOLIST';
+import {api} from "./api";
+
+export const ADD_TODOLIST_SUCCESS = 'TodoApp/TodolistReducer/ADD_TODOLIST_SUCCESS';
+export const DELETE_TODOLIST_SUCCESS = 'TodoApp/TodolistReducer/DELETE_TODOLIST_SUCCESS';
 export const ADD_TASK = 'TodoApp/TodolistReducer/ADD_TASK';
 export const CHANGE_TASK = 'TodoApp/TodolistReducer/CHANGE_TASK';
 export const DELETE_TASK = 'TodoApp/TodolistReducer/DELETE_TASK';
-export const SET_TODOLIST = 'TodoApp/TodolistReducer/SET_TODOLIST';
+export const SET_TODOLIST_SUCCESS = 'TodoApp/TodolistReducer/SET_TODOLIST_SUCCESS';
 export const SET_TASKS = 'TodoApp/TodolistReducer/SET_TASKS';
 export const CHANGE_TODOLIST_TITLE = 'TodoApp/TodolistReducer/CHANGE_TODOLIST_TITLE';
 
@@ -14,7 +16,7 @@ const initialState = {
 const todolistsReducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case SET_TODOLIST:
+        case SET_TODOLIST_SUCCESS:
             return {
                 ...state,
                 todolists: action.todoLists.map(tl => ({...tl, tasks: []}))
@@ -35,13 +37,13 @@ const todolistsReducer = (state = initialState, action) => {
                 })
             };
 
-        case ADD_TODOLIST:
+        case ADD_TODOLIST_SUCCESS:
             return {
                 ...state,
                 todolists: [...state.todolists, action.newTodoList]
             };
 
-        case DELETE_TODOLIST:
+        case DELETE_TODOLIST_SUCCESS:
             return {
                 ...state,
                 todolists: state.todolists.filter(todo => todo.id !== action.todolistId)
@@ -119,13 +121,76 @@ const todolistsReducer = (state = initialState, action) => {
     }
 };
 
-export const setTodolistsAC = (todoLists) => ({type: SET_TODOLIST, todoLists});
+export const setTodolistsSuccess = (todoLists) => ({type: SET_TODOLIST_SUCCESS, todoLists});
 export const setTasksAC = (tasks, todolistId) => ({type: SET_TASKS, tasks, todolistId});
-export const addTodolistAC = (newTodoList) => ({type: ADD_TODOLIST, newTodoList});
-export const deleteTodolistAC = (todolistId) => ({type: DELETE_TODOLIST, todolistId});
+export const addTodolistSuccess = (newTodoList) => ({type: ADD_TODOLIST_SUCCESS, newTodoList});
+export const deleteTodolistSuccess = (todolistId) => ({type: DELETE_TODOLIST_SUCCESS, todolistId});
 export const addTaskAC = (todolistId, newTask) => ({type: ADD_TASK, todolistId, newTask});
 export const deleteTaskAC = (todolistId, taskId) => ({type: DELETE_TASK, todolistId, taskId});
 export const changeTaskAC = (todolistId, taskId, obj) => ({type: CHANGE_TASK, todolistId, taskId, obj});
 export const changeTodolistTitleAC = (todolistId, title) => ({type: CHANGE_TODOLIST_TITLE, todolistId, title});
 
 export default todolistsReducer;
+
+
+//Thunks
+
+export const setTodoLists = () => (dispatch, getStore) => {
+    api.getTodolists()
+        .then(res => {
+            dispatch(setTodolistsSuccess(res));
+        })
+        .catch(error => {
+
+        })
+};
+
+export const addTodolist = (title) => (dispatch, getStore) => {
+    api.createTodolist(title)
+        .then(res => {
+            let newTodoList = res.item;
+            dispatch(addTodolistSuccess(newTodoList))
+        })
+        .catch(error => {
+
+        })
+};
+
+export const deleteTodolist = (todolistId) => (dispatch, getStore) => {
+    api.deleteListItem(todolistId)
+        .then(res => {
+            dispatch(deleteTodolistSuccess(todolistId))
+        })
+        .catch(error => {
+
+        })
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

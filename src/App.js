@@ -1,28 +1,18 @@
 import React, {Component} from 'react';
-import './App.css';
+import './App.scss';
 import TodoList from "./components/TodoList/TodoList";
 import AddNewItemForm from "./components/AddNewItemForm/AddNewItemForm";
 import {connect} from 'react-redux'
-import {addTodolistAC, deleteTodolistAC, setTodolistsAC} from "./redux/todolistsReducer";
-import {api} from "./redux/api";
+import {addTodolist, deleteTodolist, setTodoLists} from "./redux/todolistsReducer";
 
 class App extends Component {
 
     addListItem = (title) => {
-        api.createTodolist(title)
-            .then(res => {
-                let todolist = res.item;
-                this.props.addTodolist(todolist)
-            })
+        this.props.addTodolist(title)
     };
 
     deleteListItem = (todolistId) => {
-        api.deleteListItem(todolistId)
-            .then(res => {
-                if (res.resultCode === 0) {
-                    this.props.deleteTodolist(todolistId)
-                }
-            })
+        this.props.deleteTodolist(todolistId)
     };
 
     componentDidMount() {
@@ -30,21 +20,20 @@ class App extends Component {
     }
 
     restoreState = () => {
-        api.getTodolists()
-            .then(res => {
-                this.props.getTodolists(res);
-            });
+        this.props.setTodoLists();
     };
 
     render() {
         return (
-            <React.Fragment>
-                <div className={'addListItem'}>
-                    <h3>New Task:</h3>
-                    <AddNewItemForm
-                        addItem={this.addListItem}
-                        placeholder={"New TodoList name"}
-                    />
+            <>
+                <div className={'addListItemWrapper'}>
+                    <div className={'addListItem'}>
+                        <h3>New Task:</h3>
+                        <AddNewItemForm
+                            addItem={this.addListItem}
+                            placeholder={"New TodoList name"}
+                        />
+                    </div>
                 </div>
                 <div className={'App'}>
                     {this.props.todolists.map(item => (
@@ -57,7 +46,7 @@ class App extends Component {
                         />
                     ))}
                 </div>
-            </React.Fragment>
+            </>
         )
     }
 }
@@ -68,21 +57,6 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch) => ({
 
-    getTodolists: (todolists) => {
-        dispatch(setTodolistsAC(todolists));
-    },
-
-    addTodolist: newListItem => {
-        dispatch(addTodolistAC(newListItem))
-    },
-
-    deleteTodolist: todolistId => {
-        dispatch(deleteTodolistAC(todolistId))
-    }
-});
-
-
-const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+const ConnectedApp = connect(mapStateToProps, {setTodoLists, addTodolist, deleteTodolist})(App);
 export default ConnectedApp;

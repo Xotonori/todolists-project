@@ -1,0 +1,39 @@
+.App {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.addListItemWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+
+  .addListItem {
+    display: flex;
+    width: 350px;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.TodoList > div {
+  padding: 10px;
+}
+
+.filter-active {
+  background-color: blue;
+}
+
+.err {
+  border-color: red;
+}
+
+.todoList-task {
+  margin-bottom: 10px;
+}
+
+.todoList-task.done {
+  opacity: 0.5;
+}

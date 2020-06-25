@@ -1,0 +1,26 @@
+.TodoList {
+  width: 300px;
+  background-color: #c5e8ff;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .todoListHeader {
+    display: flex;
+    flex-direction: column;
+
+    .TodoListTitleWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+
+
+
+

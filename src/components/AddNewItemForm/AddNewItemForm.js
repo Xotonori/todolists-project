@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import Input from "../Input/Input";
+import {Button, TextField} from '@material-ui/core';
+import classes from './AddNewItemForm.module.scss'
 
 class AddNewItemForm extends Component {
 
@@ -34,15 +35,18 @@ class AddNewItemForm extends Component {
 
     render() {
         return (
-            <div className="todoList-newItemForm">
-                <Input
-                    errorClass={this.state.error ? 'err' : ''}
-                    onChange={this.onTitleChange}
-                    onKeyPress={this.onKeyPress}
-                    value={this.state.title}
-                    placeholder={this.props.placeholder}
+            <div className={classes.todoListNewItemForm}>
+                <TextField onChange={this.onTitleChange}
+                           onKeyPress={this.onKeyPress}
+                           value={this.state.title}
+                           label={this.props.placeholder}
+                           error={this.state.error}
+                           helperText={this.state.error && 'Title is required!'}
                 />
-                <button onClick={this.onAddItemClick}>Add</button>
+                <Button variant="contained"
+                        color="primary"
+                        onClick={this.onAddItemClick}
+                        className={classes.onAddItemButton}>+</Button>
             </div>
         );
     }

@@ -2,12 +2,15 @@ import React from 'react';
 import DeleteItem from "../../../DeleteItem/DeleteItem";
 import classes from './TodoListTask.module.css';
 import {api} from "../../../../redux/api";
+import {TextField, Checkbox} from "@material-ui/core";
 
 class TodoListTask extends React.Component {
 
     state = {
         isEditMode: false,
-        title: this.props.task.title
+        title: this.props.task.title,
+        oldTitle: '',
+        isTitleEmpty: false
     };
 
     deleteTask = () => {
@@ -25,12 +28,18 @@ class TodoListTask extends React.Component {
     };
 
     activatedEditMode = () => {
-        this.setState({isEditMode: true})
+        this.setState({
+            isEditMode: true,
+            oldTitle: this.state.title
+        })
     };
 
     deActivatedEditMode = () => {
         this.setState({isEditMode: false});
-        this.updateTask({title: this.state.title})
+        this.state.isTitleEmpty ?
+            this.setState({title: this.state.oldTitle}) :
+            this.updateTask({title: this.state.title});
+        this.setState({isTitleEmpty: false});
     };
 
     setChangeByEnter = (e) => {
@@ -45,7 +54,10 @@ class TodoListTask extends React.Component {
     };
 
     onTitleChanged = (e) => {
-        this.setState({title: e.currentTarget.value});
+        let title = e.currentTarget.value;
+        title.length === 0 ?
+            this.setState({isTitleEmpty: true, title: title}) :
+            this.setState({isTitleEmpty: false, title: title})
     };
 
     render() {
@@ -54,29 +66,32 @@ class TodoListTask extends React.Component {
         return (
             <div className={classes.Task}>
                 <div className={taskIsDoneClass}>
-                    <input
-                        type="checkbox"
-                        checked={status}
-                        onChange={this.onIsDoneChanged}
+                    <Checkbox type="checkbox"
+                              checked={status}
+                              onChange={this.onIsDoneChanged}
+                              color={'primary'}
                     />
 
                     {this.state.isEditMode
                         ?
-                        <input
-                            value={this.state.title}
-                            onKeyPress={this.setChangeByEnter}
-                            autoFocus={true}
-                            onBlur={this.deActivatedEditMode}
-                            onChange={this.onTitleChanged}
+                        <TextField value={this.state.title}
+                                   onKeyPress={this.setChangeByEnter}
+                                   autoFocus={true}
+                                   onBlur={this.deActivatedEditMode}
+                                   onChange={this.onTitleChanged}
+                                   helperText={this.state.isTitleEmpty && 'Title is required!'}
+                                   error={this.state.isTitleEmpty}
                         />
                         :
                         <span onClick={this.activatedEditMode}>
-                            {this.props.task.id} : {this.props.task.title}
+                            {this.props.task.title}
                         </span>
                     }
-                    <span> - {this.props.task.priority}</span>
                 </div>
-                <DeleteItem deleteItem={this.deleteTask}/>
+                <DeleteItem
+                    deleteItem={this.deleteTask}
+                    buttonStyle={'taskDeleteButton'}
+                />
             </div>
         )
     }

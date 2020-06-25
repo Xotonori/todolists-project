@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import classes from './TodoListFooter.module.css'
+import classes from './TodoListFooter.module.scss'
+import {Button} from "@material-ui/core";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 
 class TodoListFooter extends Component {
@@ -36,23 +38,25 @@ class TodoListFooter extends Component {
 
                 {!this.state.isHidden &&
                 <div className={classes.filters}>
-                    <button className={classForAll}
+                    <Button className={classForAll}
                             onClick={this.onAllFilterClick}
                     >All
-                    </button>
-                    <button className={classForCompleted}
+                    </Button>
+                    <Button className={classForCompleted}
                             onClick={this.onCompletedFilterClick}
+                            color={'primary'}
                     >Completed
-                    </button>
-                    <button className={classForActive}
+                    </Button>
+                    <Button className={classForActive}
                             onClick={this.onActiveFilterClick}
+                            color={'secondary'}
                     >Active
-                    </button>
+                    </Button>
                 </div>
                 }
 
-                {!this.state.isHidden && <span onClick={this.onShowFiltersClick} className={classes.isHidden}> hide </span>}
-                {this.state.isHidden && <span onClick={this.onHideFiltersClick} className={classes.isHidden}> show </span>}
+                {!this.state.isHidden && <Button onClick={this.onShowFiltersClick} className={classes.isHidden} title={'Скрыть панель фильтров'}> <VisibilityOff /> </Button>}
+                {this.state.isHidden && <Button onClick={this.onHideFiltersClick} className={classes.isHidden} title={'Показать панель фильтров'}> <Visibility /> </Button>}
             </div>
 
         );

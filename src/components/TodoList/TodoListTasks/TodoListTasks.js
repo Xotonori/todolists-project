@@ -1,20 +1,20 @@
 import React from 'react';
 import TodoListTask from "./TodoListTask/TodoListTask"
+import classes from './TodoListTasks.module.scss'
 
 
 const TodoListTasks = props => (
 
-        <div className="todoList-tasks">
-            {props.tasks.map(task => (
-                <TodoListTask
-                    key={task.id}
-                    todolistId={props.todolistId}
-                    task={task}
-                    deleteTask={props.deleteTask}
-                    changeTask={props.changeTask}
-                />
-            ))}
-        </div>
+    <div className={classes.TodoListTasks}>
+        {props.tasks.map(task => (
+            <TodoListTask key={task.id}
+                          todolistId={props.todolistId}
+                          task={task}
+                          deleteTask={props.deleteTask}
+                          changeTask={props.changeTask}
+            />
+        ))}
+    </div>
 );
 
 

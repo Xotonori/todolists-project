@@ -4,10 +4,16 @@ import TodoListTasks from "./TodoListTasks/TodoListTasks"
 import TodoListFooter from "./TodoListFooter/TodoListFooter"
 import TodoListTitle from "./TodoListTitle/TodoListTitle";
 import AddNewItemForm from "../AddNewItemForm/AddNewItemForm";
-import {addTaskAC, changeTaskAC, changeTodolistTitleAC, deleteTaskAC, setTasksAC} from '../../redux/todolistsReducer'
+import {
+    addTask,
+    changeTask, changeTodolistTitle,
+    changeTodolistTitleSuccess,
+    deleteTask,
+    setTasks
+} from '../../redux/todolistsReducer'
 import {connect} from "react-redux";
 import DeleteItem from "../DeleteItem/DeleteItem";
-import {api} from "../../redux/api";
+
 
 class TodoList extends Component {
 
@@ -16,11 +22,7 @@ class TodoList extends Component {
     };
 
     addTask = (title) => {
-        api.addTask(title, this.props.id)
-            .then(res => {
-                let task = res.item;
-                this.props.addTask(this.props.id, task);
-            })
+        this.props.addTask(title, this.props.id);
     };
 
     deleteTodoList = () => {
@@ -31,20 +33,12 @@ class TodoList extends Component {
         this.setState({filterValue: newFilterValue})
     };
 
-    changeTask = (taskId, obj) => {
-        this.props.changeTask(this.props.id, taskId, obj)
-    };
-
     componentDidMount() {
         this.restoreState();
     }
 
     restoreState = () => {
-        api.getTasks(this.props.id)
-            .then(res => {
-                let allTasks = res.items;
-                this.props.setTasks(allTasks, this.props.id);
-            });
+        this.props.setTasks(this.props.id);
     };
 
     render() {
@@ -80,7 +74,7 @@ class TodoList extends Component {
                 <TodoListTasks tasks={filteredTasks}
                                todolistId={this.props.id}
                                deleteTask={this.props.deleteTask}
-                               changeTask={this.changeTask}
+                               changeTask={this.props.changeTask}
                 />
                 <TodoListFooter filterValue={this.state.filterValue}
                                 changeFilter={this.changeFilter}
@@ -90,29 +84,11 @@ class TodoList extends Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setTasks: (tasks, todolistId) => {
-            dispatch(setTasksAC(tasks, todolistId));
-        },
-
-        addTask: (todolistId, newTask) => {
-            dispatch(addTaskAC(todolistId, newTask));
-        },
-
-        deleteTask: (todolistId, taskId) => {
-            dispatch(deleteTaskAC(todolistId, taskId))
-        },
-
-        changeTask: (todolistId, taskId, obj) => {
-            dispatch(changeTaskAC(todolistId, taskId, obj));
-        },
-
-        changeTodolistTitle: (todolistId, title) => {
-            dispatch(changeTodolistTitleAC(todolistId, title));
-        }
-    }
-};
-
-const ConnectedTodoList = connect(null, mapDispatchToProps)(TodoList);
+const ConnectedTodoList = connect(null, {
+    setTasks,
+    addTask,
+    deleteTask,
+    changeTask,
+    changeTodolistTitle
+})(TodoList);
 export default ConnectedTodoList;

@@ -55,8 +55,12 @@ class TodoListFooter extends Component {
                 </div>
                 }
 
-                {!this.state.isHidden && <Button onClick={this.onShowFiltersClick} className={classes.isHidden} title={'Скрыть панель фильтров'}> <VisibilityOff /> </Button>}
-                {this.state.isHidden && <Button onClick={this.onHideFiltersClick} className={classes.isHidden} title={'Показать панель фильтров'}> <Visibility /> </Button>}
+                {!this.state.isHidden && <Button onClick={this.onShowFiltersClick}
+                                                 className={classes.isHidden}
+                                                 title={'Скрыть панель фильтров'}> <VisibilityOff /> </Button>}
+                {this.state.isHidden && <Button onClick={this.onHideFiltersClick}
+                                                className={classes.isHidden}
+                                                title={'Показать панель фильтров'}> <Visibility /> </Button>}
             </div>
 
         );

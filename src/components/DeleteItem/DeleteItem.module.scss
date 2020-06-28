@@ -1,0 +1,23 @@
+.DeleteItemWrapper {
+  .DeleteItem {
+    min-width: 0;
+    padding: 5px 10px;
+
+    .Delete {
+
+    }
+
+  }
+}
+
+.DeleteItemWrapperBackspace {
+  .DeleteItem {
+    padding: 0;
+
+    .Backspace {
+      color: #ff503e;
+    }
+  }
+}
+
+

@@ -1,0 +1,13 @@
+.todoListNewItemForm{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 230px;
+
+  .onAddItemButton {
+    padding: 0;
+    min-width: 30px;
+    font-size: 18px;
+    border-radius: 50%;
+  }
+}

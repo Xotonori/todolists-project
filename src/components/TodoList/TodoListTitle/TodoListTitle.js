@@ -14,10 +14,7 @@ class TodoListTitle extends Component {
     };
 
     updateTodolistTitle = (title) => {
-        api.changeTodolistTitle(this.props.todolistId, {...title})
-            .then(res => {
-                this.props.changeTodolistTitle(this.props.todolistId, this.state.title)
-            });
+        this.props.changeTodolistTitle(this.props.todolistId, title)
     };
 
     activatedEditMode = () => {

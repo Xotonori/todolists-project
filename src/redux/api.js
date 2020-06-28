@@ -25,7 +25,9 @@ export const api = {
 
     getTasks(todolistId) {
         return instance.get(`/${todolistId}/tasks`)
-            .then(res => res.data)
+            .then(res => {
+                return res.data
+            })
     },
 
     addTask(title, todolistId) {

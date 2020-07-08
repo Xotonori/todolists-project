@@ -1,9 +1,25 @@
 import React from 'react';
 import DeleteItem from "../../../DeleteItem/DeleteItem";
-import classes from './TodoListTask.module.css';
+import classes from './TodoListTask.module.scss';
 import {TextField, Checkbox} from "@material-ui/core";
+import {TaskType, UpdatedTaskParamType} from "../../../../types/entities";
 
-class TodoListTask extends React.Component {
+type OwnPropsType = {
+    key: string;
+    todolistId: string;
+    task: TaskType;
+    deleteTask: (todolistId: string, taskId: string) => void;
+    changeTask: (todolistId: string, task: TaskType, obj: UpdatedTaskParamType) => void;
+}
+
+type StateType = {
+    isEditMode: boolean;
+    title: string;
+    oldTitle: string;
+    isTitleEmpty: boolean;
+}
+
+export class TodoListTask extends React.Component<OwnPropsType, StateType> {
 
     state = {
         isEditMode: false,
@@ -16,7 +32,7 @@ class TodoListTask extends React.Component {
         this.props.deleteTask(this.props.todolistId, this.props.task.id)
     };
 
-    updateTask = (obj) => {
+    updateTask = (obj: UpdatedTaskParamType) => {
         this.props.changeTask(this.props.todolistId, this.props.task, obj)
     };
 
@@ -35,18 +51,18 @@ class TodoListTask extends React.Component {
         this.setState({isTitleEmpty: false});
     };
 
-    setChangeByEnter = (e) => {
+    setChangeByEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter') {
             this.deActivatedEditMode();
         }
     };
 
-    onIsDoneChanged = (e) => {
+    onIsDoneChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         let status = e.currentTarget.checked ? 2 : 0;
         this.updateTask({status: status});
     };
 
-    onTitleChanged = (e) => {
+    onTitleChanged = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let title = e.currentTarget.value;
         title.length === 0 ?
             this.setState({isTitleEmpty: true, title: title}) :
@@ -59,8 +75,7 @@ class TodoListTask extends React.Component {
         return (
             <div className={classes.Task}>
                 <div className={taskIsDoneClass}>
-                    <Checkbox type="checkbox"
-                              checked={status}
+                    <Checkbox checked={status}
                               onChange={this.onIsDoneChanged}
                               color={'primary'}
                     />
@@ -90,4 +105,3 @@ class TodoListTask extends React.Component {
     }
 }
 
-export default TodoListTask;

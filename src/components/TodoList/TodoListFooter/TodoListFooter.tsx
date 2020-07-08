@@ -3,8 +3,15 @@ import classes from './TodoListFooter.module.scss'
 import {Button} from "@material-ui/core";
 import {Visibility, VisibilityOff} from "@material-ui/icons";
 
+type OwnPropsType = {
+    filterValue: string;
+    changeFilter:(newFilterValue: string)=>void;
+}
+type StateType = {
+    isHidden: boolean;
+}
 
-class TodoListFooter extends Component {
+class TodoListFooter extends Component<OwnPropsType, StateType> {
 
     state = {
         isHidden: false

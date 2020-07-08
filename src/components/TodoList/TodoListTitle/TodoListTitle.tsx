@@ -1,10 +1,22 @@
 import React, {Component} from 'react';
-import {api} from "../../../redux/api";
 import classes from './TodoListTitle.module.css'
 import {TextField} from "@material-ui/core";
+import {UpdatedTodoTitleType} from "../../../types/entities";
 
+type OwnPropsType = {
+    title: string;
+    changeTodolistTitle:(todolistId: string, objTitle: UpdatedTodoTitleType)=>void;
+    todolistId: string;
+}
 
-class TodoListTitle extends Component {
+type StateType = {
+    title: string;
+    isEditMode: boolean;
+    oldTitle: string;
+    isTitleEmpty: boolean;
+}
+
+class TodoListTitle extends Component<OwnPropsType, StateType> {
 
     state = {
         title: this.props.title,
@@ -13,8 +25,8 @@ class TodoListTitle extends Component {
         isTitleEmpty: false
     };
 
-    updateTodolistTitle = (title) => {
-        this.props.changeTodolistTitle(this.props.todolistId, title)
+    updateTodolistTitle = (objTitle: UpdatedTodoTitleType) => {
+        this.props.changeTodolistTitle(this.props.todolistId, objTitle)
     };
 
     activatedEditMode = () => {
@@ -32,13 +44,13 @@ class TodoListTitle extends Component {
         this.setState({isTitleEmpty: false});
     };
 
-    setChangeByEnter = (e) => {
+    setChangeByEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter') {
             this.deActivatedEditMode();
         }
     };
 
-    onTitleChanged = (e) => {
+    onTitleChanged = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         let title = e.currentTarget.value;
         title.length === 0 ?
             this.setState({isTitleEmpty: true, title: title}) :

@@ -3,7 +3,12 @@ import classes from './DeleteItem.module.scss'
 import {Button} from '@material-ui/core';
 import {Delete, Backspace} from '@material-ui/icons';
 
-class DeleteItem extends React.Component {
+type OwnPropsType = {
+    deleteItem: () => void;
+    buttonStyle?: string;
+}
+
+class DeleteItem extends React.Component<OwnPropsType> {
     render() {
 
         if (this.props.buttonStyle === 'taskDeleteButton') {

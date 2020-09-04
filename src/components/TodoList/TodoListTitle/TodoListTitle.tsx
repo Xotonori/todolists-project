@@ -59,7 +59,6 @@ class TodoListTitle extends Component<OwnPropsType, StateType> {
 
     render() {
         return (
-
             <>
                 {this.state.isEditMode
                     ?

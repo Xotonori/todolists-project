@@ -9,34 +9,12 @@ import {
     changeTask,
     changeTodolistTitle,
     deleteTask,
-    setTasks
+    setTasks,
 } from '../../redux/todolistsReducer'
 import {connect} from "react-redux";
 import DeleteItem from "../DeleteItem/DeleteItem";
 import {TaskType, UpdatedTaskParamType, UpdatedTodoTitleType} from "../../types/entities";
 import {AppStateType} from "../../redux/store";
-
-
-type OwnPropsType = {
-    key: string;
-    id: string;
-    title: string;
-    tasks: Array<TaskType>;
-    deleteListItem: (todolistId: string) => void;
-}
-type MapDispatchToPropsType = {
-    setTasks: (todolistId: string) => void;
-    addTask: (title: string, todolistId: string) => void;
-    deleteTask: (todolistId: string, taskId: string) => void;
-    changeTask: (todolistId: string, task: TaskType, obj: UpdatedTaskParamType) => void;
-    changeTodolistTitle: (todolistId: string, objTitle: UpdatedTodoTitleType) => void;
-}
-
-type StateType = {
-    filterValue: string;
-}
-
-type CommonPropsType = OwnPropsType & MapDispatchToPropsType & {};
 
 class TodoList extends Component<CommonPropsType, StateType> {
 
@@ -114,3 +92,27 @@ export default connect<{}, MapDispatchToPropsType, OwnPropsType, AppStateType>(n
     changeTask,
     changeTodolistTitle
 })(TodoList);
+
+
+//Types
+type OwnPropsType = {
+    key: string;
+    id: string;
+    title: string;
+    tasks: Array<TaskType>;
+    deleteListItem: (todolistId: string) => void;
+}
+
+type MapDispatchToPropsType = {
+    setTasks: (todolistId: string) => void;
+    addTask: (title: string, todolistId: string) => void;
+    deleteTask: (todolistId: string, taskId: string) => void;
+    changeTask: (todolistId: string, task: TaskType, obj: UpdatedTaskParamType) => void;
+    changeTodolistTitle: (todolistId: string, objTitle: UpdatedTodoTitleType) => void;
+}
+
+type StateType = {
+    filterValue: string;
+}
+
+type CommonPropsType = OwnPropsType & MapDispatchToPropsType & {};

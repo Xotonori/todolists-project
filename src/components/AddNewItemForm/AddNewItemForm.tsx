@@ -2,36 +2,47 @@ import React, {Component} from 'react';
 import {Button, TextField} from '@material-ui/core';
 import classes from './AddNewItemForm.module.scss'
 
-class AddNewItemForm extends Component {
+export class AddNewItemForm extends Component<OwnPropsType, StateType> {
 
-    state = {
+    state: StateType = {
         error: false,
-        title: ''
+        title: '',
+        focus: false
     };
 
     onAddItemClick = () => {
         let newTitle = this.state.title.trim();
 
         if (newTitle.length === 0) {
-            this.setState({error: true})
+            this.setState({
+                error: true,
+                focus: true
+            })
         } else {
             this.setState({title: ''});
             this.props.addItem(newTitle);
         }
     };
 
-    onTitleChange = (e) => {
+    onTitleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         this.setState({
             error: false,
             title: e.currentTarget.value
-        })
+        });
     };
 
-    onKeyPress = (e) => {
+    onKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter') {
             this.onAddItemClick()
         }
     };
+
+    onMouseUpHandler = () => {
+        this.setState({
+            error: false,
+        });
+    }
+
 
     render() {
         return (
@@ -41,6 +52,8 @@ class AddNewItemForm extends Component {
                            value={this.state.title}
                            label={this.props.placeholder}
                            error={this.state.error}
+                           onMouseUp={this.onMouseUpHandler}
+                           autoFocus={this.state.focus}
                            helperText={this.state.error && 'Title is required!'}
                 />
                 <Button variant="contained"
@@ -53,4 +66,16 @@ class AddNewItemForm extends Component {
 
 }
 
-export default AddNewItemForm;
+//Types
+
+type StateType = {
+    error: boolean;
+    title: string;
+    focus: boolean;
+}
+
+type OwnPropsType = {
+    addItem: (title: string) => void;
+    placeholder: string;
+}
+

@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
 import classes from './TodoListFooter.module.scss'
-import {Button} from "@material-ui/core";
+import {Button, Fade} from "@material-ui/core";
 import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 type OwnPropsType = {
     filterValue: string;
-    changeFilter:(newFilterValue: string)=>void;
+    changeFilter: (newFilterValue: string) => void;
 }
 type StateType = {
     isHidden: boolean;
 }
 
 class TodoListFooter extends Component<OwnPropsType, StateType> {
-
     state = {
         isHidden: false
     };
@@ -38,36 +37,36 @@ class TodoListFooter extends Component<OwnPropsType, StateType> {
         let classForAll = this.props.filterValue === "All" ? "filter-active" : "";
         let classForCompleted = this.props.filterValue === "Completed" ? "filter-active" : "";
         let classForActive = this.props.filterValue === "Active" ? "filter-active" : "";
+        const hiddenValue = this.state.isHidden;
 
         return (
-
             <div className={classes.TodoListFooter}>
-
-                {!this.state.isHidden &&
-                <div className={classes.filters}>
-                    <Button className={classForAll}
-                            onClick={this.onAllFilterClick}
-                    >All
-                    </Button>
-                    <Button className={classForCompleted}
-                            onClick={this.onCompletedFilterClick}
-                            color={'primary'}
-                    >Completed
-                    </Button>
-                    <Button className={classForActive}
-                            onClick={this.onActiveFilterClick}
-                            color={'secondary'}
-                    >Active
-                    </Button>
-                </div>
+                {!hiddenValue &&
+                <Fade in={!hiddenValue} timeout={700}>
+                    <div className={classes.filters}>
+                        <Button className={classForAll}
+                                onClick={this.onAllFilterClick}
+                        >All </Button>
+                        <Button className={classForCompleted}
+                                onClick={this.onCompletedFilterClick}
+                                color={'primary'}
+                        >Completed
+                        </Button>
+                        <Button className={classForActive}
+                                onClick={this.onActiveFilterClick}
+                                color={'secondary'}
+                        >Active
+                        </Button>
+                    </div>
+                </Fade>
                 }
 
                 {!this.state.isHidden && <Button onClick={this.onShowFiltersClick}
                                                  className={classes.isHidden}
-                                                 title={'Скрыть панель фильтров'}> <VisibilityOff /> </Button>}
+                                                 title={'Скрыть панель фильтров'}> <VisibilityOff/> </Button>}
                 {this.state.isHidden && <Button onClick={this.onHideFiltersClick}
                                                 className={classes.isHidden}
-                                                title={'Показать панель фильтров'}> <Visibility /> </Button>}
+                                                title={'Показать панель фильтров'}> <Visibility/> </Button>}
             </div>
 
         );

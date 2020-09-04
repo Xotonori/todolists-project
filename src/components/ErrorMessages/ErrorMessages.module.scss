@@ -1,0 +1,11 @@
+.alertWrapper {
+  position: fixed;
+  right: 0;
+  z-index: 10;
+
+  .Alert {
+    padding: 15px !important;
+    margin: 20px;
+    border-radius: 15px !important;
+  }
+}

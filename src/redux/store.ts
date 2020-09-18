@@ -4,7 +4,8 @@ import thunk from 'redux-thunk'
 import {todolistsReducer} from "./todolistsReducer";
 
 const rootReducer = combineReducers({
-    todolistsReducer
+    todolistsReducer,
+    // authReducer
 });
 
 export type AppStateType = ReturnType<typeof rootReducer>

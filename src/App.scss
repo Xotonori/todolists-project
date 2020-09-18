@@ -1,15 +1,25 @@
-.filter-active {
-  background-color: blue;
+.App {
+  position: relative;
+  height: 100vmin;
+
+  //.filter-active {
+  //  background-color: blue;
+  //}
+
+  .err {
+    border-color: red;
+  }
+
+  .todoList-task {
+    margin-bottom: 10px;
+  }
+
+  .todoList-task.done {
+    opacity: 0.5;
+  }
+
 }
 
-.err {
-  border-color: red;
-}
 
-.todoList-task {
-  margin-bottom: 10px;
-}
 
-.todoList-task.done {
-  opacity: 0.5;
-}
+

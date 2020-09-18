@@ -1,4 +1,4 @@
-import {api} from "./api";
+import {TodoApi} from "./todoApi";
 import {
     TaskType,
     TodoListType,
@@ -7,7 +7,6 @@ import {
 } from "../types/entities";
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "./store";
-import {log} from "util";
 
 export const ADD_TODOLIST_SUCCESS = 'TodoApp/TodolistReducer/ADD_TODOLIST_SUCCESS';
 export const DELETE_TODOLIST_SUCCESS = 'TodoApp/TodolistReducer/DELETE_TODOLIST_SUCCESS';
@@ -180,7 +179,7 @@ export const setTodoLists = (): ThunkType => async (
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        const todolists = await api.getTodolists();
+        const todolists = await TodoApi.getTodolists();
         await dispatch(actions.setTodolistsSuccess(todolists));
     } catch (e) {
         console.log(e.response.data.message);
@@ -191,7 +190,7 @@ export const addTodolist = (title: string): ThunkType => async (
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        const newTodoList = await api.createTodolist(title);
+        const newTodoList = await TodoApi.createTodolist(title);
         await dispatch(actions.addTodolistSuccess(newTodoList));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -203,7 +202,7 @@ export const changeTodolistTitle = (todolistId: string, objTitle: UpdatedTodoTit
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        await api.changeTodolistTitle(todolistId, {...objTitle})
+        await TodoApi.changeTodolistTitle(todolistId, {...objTitle})
         await dispatch(actions.changeTodolistTitleSuccess(todolistId, objTitle.title));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -215,7 +214,7 @@ export const deleteTodolist = (todolistId: string): ThunkType => async (
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        await api.deleteListItem(todolistId)
+        await TodoApi.deleteListItem(todolistId)
         await dispatch(actions.deleteTodolistSuccess(todolistId));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -226,7 +225,7 @@ export const deleteTodolist = (todolistId: string): ThunkType => async (
 export const setTasks = (todolistId: string): ThunkType => async (
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     try {
-        const allTasks = await api.getTasks(todolistId);
+        const allTasks = await TodoApi.getTasks(todolistId);
         await dispatch(actions.setTasksSuccess(allTasks, todolistId));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -238,7 +237,7 @@ export const addTask = (title: string, todolistId: string): ThunkType => async (
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        const task = await api.addTask(title, todolistId);
+        const task = await TodoApi.addTask(title, todolistId);
         await dispatch(actions.addTaskSuccess(todolistId, task));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -250,7 +249,7 @@ export const changeTask = (todolistId: string, task: TaskType, obj: UpdatedTaskP
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        await api.updateTask(todolistId, task.id, {...task, ...obj});
+        await TodoApi.updateTask(todolistId, task.id, {...task, ...obj});
         await dispatch(actions.changeTaskSuccess(todolistId, task.id, {...task, ...obj}));
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));
@@ -262,7 +261,7 @@ export const deleteTask = (todolistId: string, taskId: string): ThunkType => asy
     dispatch: ThunkDispatchType, getState: () => AppStateType) => {
     await dispatch(actions.isFetchingSuccess(true));
     try {
-        await api.deleteTask(todolistId, taskId);
+        await TodoApi.deleteTask(todolistId, taskId);
         await dispatch(actions.deleteTaskSuccess(todolistId, taskId))
     } catch (e) {
         await dispatch(actions.isErrorMessagesSuccess(e.response.data.message));

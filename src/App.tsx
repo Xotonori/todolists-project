@@ -1,4 +1,4 @@
-import React, {Component, memo} from 'react';
+import React, {memo} from 'react';
 import './App.scss';
 import {Preloader} from "./components/Preloader/Preloader";
 import {ErrorMessages} from "./components/ErrorMessages/ErrorMessages";
@@ -9,13 +9,14 @@ import TodolistContainer from "./components/TodoListContainer/TodolIstContainer"
 export const App = memo(() => {
 
     return (
-        <>
+        <div className={'App'}>
             <Preloader/>
             <ErrorMessages/>
             <HeaderAuth/>
             {/*{true ? <AuthForm/> : <TodolistContainer/>}*/}
-            <TodolistContainer/>
-        </>
+            <AuthForm/>
+            {/*<TodolistContainer/>*/}
+        </div>
     )
 })
 

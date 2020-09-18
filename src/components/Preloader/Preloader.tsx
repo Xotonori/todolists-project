@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import { AppStateType } from '../../redux/store';
 
 export const Preloader = memo(() => {
-    const {todolistsReducer: {isFetching}} = useSelector((state: AppStateType) => state);
+    const {isFetching} = useSelector((state: AppStateType) => state.todolistsReducer);
     return (
         isFetching ? <Backdrop open={true} style={{zIndex: 1}}>
             <CircularProgress color="primary"/>

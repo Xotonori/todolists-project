@@ -7,7 +7,7 @@ const instance = axios.create({
     headers: {"API-KEY": "6e863487-7e15-440d-bed9-55795c7bd9f6"}
 });
 
-export const api = {
+export const TodoApi = {
 
     createTodolist(title: string) {
         return instance.post<CommonResponseType<{ item: TodoListType }>>('', {title})

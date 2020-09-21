@@ -9,15 +9,13 @@ type Props = {
     path: string
 }
 
-export const AuthenticationRoute: FC<Props> = memo(({Component, exact, path, ...rest}) => {
+export const AuthenticationRoute: FC<Props> = memo(({Component, exact = false, path, ...rest}) => {
     const isAuth = useSelector((state: AppStateType) => state.authReducer.isAuth);
     return (
         <Route
             exact={exact}
             path={path}
-            render={() =>
-                isAuth ? <Component {...rest}/> : <Redirect to='/sign-in'/>
-            }
+            render={() => isAuth ? <Component {...rest}/> : <Redirect to='/sign-in'/>}
         />
     );
 });

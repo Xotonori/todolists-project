@@ -1,16 +1,20 @@
-import React, {memo} from 'react'
+import React, {memo, useEffect} from 'react'
 import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from '@hookform/resolvers';
 import {schemaSignInForm} from "../../utils/validators/validators";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {authInput} from './authInput/authInput';
 import {Button} from '@material-ui/core';
 import {AccountCircle, Lock} from "@material-ui/icons";
-import classes from './AuthForm.module.scss';
+import classes from './SignIn.module.scss';
+import {signInThunk} from "../../redux/authReducer";
+import { Redirect } from 'react-router-dom';
+import {AppStateType} from "../../redux/store";
 
 
-export const AuthForm = memo(() => {
+export const SignIn = memo(() => {
 
+    const isAuth = useSelector((state: AppStateType) => state.authReducer.isAuth);
     const dispatch = useDispatch();
 
     const {handleSubmit, errors, control, reset} = useForm<FormInputsType>({
@@ -18,9 +22,15 @@ export const AuthForm = memo(() => {
     });
 
     const onSubmit = (data: FormInputsType) => {
-
-        // dispatch(userRegistrationCallback(...data);
+        const rememberMe = false;
+        const captcha = true;
+        dispatch(signInThunk(data.email, data.password, rememberMe, captcha));
     };
+
+    if (isAuth) {
+        console.log(isAuth)
+        return <Redirect to={`/todolists`}/>
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={classes.Form}>
@@ -52,7 +62,7 @@ export const AuthForm = memo(() => {
                 {errors.password && <p className={classes.ErrorMessage}>{errors.password.message}</p>}
             </div>
 
-            <Button type={'submit'} onClick={()=>reset()} className={classes.Button}>Sign In</Button>
+            <Button type={'submit'} onClick={() => reset()} className={classes.Button}>Sign In</Button>
         </form>
     );
 });

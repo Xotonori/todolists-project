@@ -1,3 +1,4 @@
+//TodolistsTypes
 export type TodoListType = {
     id: string
     addedDate: string
@@ -27,4 +28,19 @@ export type TaskType = {
     todoListId: string
     order: number
     addedDate: string
+}
+
+//AuthTypes
+export type signInDataType = {
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+    captcha?: boolean
+}
+
+//ApiTypes
+export type CommonResponseType<T> = {
+    messages: Array<string>
+    resultCode: number
+    data: T
 }

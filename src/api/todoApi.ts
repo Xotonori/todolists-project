@@ -1,7 +1,7 @@
 import {CommonResponseType, TaskType, TodoListType, UpdatedTodoTitleType} from "../types/entities";
 import {instance} from './instance';
 
-export const TodoApi = {
+export const todoApi = {
 
     createTodolist: (title: string) => {
         return instance.post<CommonResponseType<{ item: TodoListType }>>('todo-lists', {title})

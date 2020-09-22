@@ -1,23 +1,34 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo, useCallback, useEffect} from 'react'
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store";
-import {actions} from "../../redux/todolistsReducer";
+import {todoActions} from "../../redux/todolistsReducer";
 import classes from "./ErrorMessages.module.scss";
+import {authActions} from "../../redux/authReducer";
 
 export const ErrorMessages = memo(() => {
 
     const dispatch = useDispatch();
 
-    const {todolistsReducer: {errorMessages}} = useSelector((state: AppStateType) => state);
+    const todoErrorMessages = useSelector((state: AppStateType) => state.todolistsReducer.errorMessages);
+    const {errorMessages: authErrorMessages, initializedApp} = useSelector((state: AppStateType) => state.authReducer);
+
+    let commonErrors = [...todoErrorMessages, ...authErrorMessages];
+    commonErrors = commonErrors.filter((err, index) => commonErrors.indexOf(err) === index);
 
     const onCloseAlertHandle = useCallback((errorMessage: string) => {
-        dispatch(actions.filterErrorMessagesSuccess(errorMessage));
-    }, [dispatch, errorMessages]);
+        dispatch(todoActions.filterErrorMessagesSuccess(errorMessage));
+        dispatch(authActions.filterErrorMessagesSuccess(errorMessage));
+    }, [dispatch, commonErrors]);
+
+    useEffect(() => {
+        dispatch(todoActions.deleteErrorMessagesSuccess());
+        dispatch(authActions.deleteErrorMessagesSuccess());
+    }, [initializedApp]);
 
     return (
         <div className={classes.alertWrapper}>
-            {errorMessages.map((errorMessage, index) => {
+            {commonErrors.map((errorMessage, index) => {
                 return (
                     <Alert key={index} severity="warning"
                            onClose={() => onCloseAlertHandle(errorMessage)}

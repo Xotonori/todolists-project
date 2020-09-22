@@ -31,7 +31,7 @@ export type TaskType = {
 }
 
 //AuthTypes
-export type signInDataType = {
+export type SignInDataType = {
     email: string,
     password: string,
     rememberMe?: boolean,

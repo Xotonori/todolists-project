@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react'
+import React, {memo} from 'react'
 import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from '@hookform/resolvers';
 import {schemaSignInForm} from "../../utils/validators/validators";
@@ -22,13 +22,12 @@ export const SignIn = memo(() => {
     });
 
     const onSubmit = (data: FormInputsType) => {
-        const rememberMe = false;
+        const rememberMe = true;
         const captcha = true;
         dispatch(signInThunk(data.email, data.password, rememberMe, captcha));
     };
 
     if (isAuth) {
-        console.log(isAuth)
         return <Redirect to={`/todolists`}/>
     }
 

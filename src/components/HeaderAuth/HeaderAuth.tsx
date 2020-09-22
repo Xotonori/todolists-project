@@ -17,8 +17,10 @@ export const HeaderAuth = memo(() => {
     const dispatch = useDispatch();
 
     const LogOutOnClick = () => {
+        dispatch(todoActions.isFetchingSuccess(true));
         dispatch(logOutThunk());
         todolistsId.map(id => dispatch(todoActions.deleteTodolistSuccess(id)));
+        dispatch(todoActions.isFetchingSuccess(false));
     }
 
     return (

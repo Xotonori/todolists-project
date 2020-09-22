@@ -21,7 +21,7 @@ export const todolistsReducer = (state: InitialStateType = initialState, action:
         case 'SET_TODOLIST_SUCCESS':
             return {
                 ...state,
-                todolists: action.todoLists.map(tl => ({...tl, tasks: []}))
+                todolists: action.todoLists.length !== 0 ? action.todoLists.map(tl => ({...tl, tasks: []})) : []
             };
 
         case 'SET_TASKS_SUCCESS':
@@ -152,12 +152,20 @@ export const todolistsReducer = (state: InitialStateType = initialState, action:
 export const todoActions = {
     setTodolistsSuccess: (todoLists: Array<TodoListType>) => ({type: 'SET_TODOLIST_SUCCESS', todoLists} as const),
     addTodolistSuccess: (newTodoList: TodoListType) => ({type: 'ADD_TODOLIST_SUCCESS', newTodoList} as const),
-    changeTodolistTitleSuccess: (todolistId: string, title: string) => ({type: 'CHANGE_TODOLIST_TITLE_SUCCESS', todolistId, title} as const),
+    changeTodolistTitleSuccess: (todolistId: string, title: string) => ({
+        type: 'CHANGE_TODOLIST_TITLE_SUCCESS',
+        todolistId,
+        title
+    } as const),
     deleteTodolistSuccess: (todolistId: string) => ({type: 'DELETE_TODOLIST_SUCCESS', todolistId} as const),
     setTasksSuccess: (tasks: Array<TaskType>, todolistId: string) => ({
         type: 'SET_TASKS_SUCCESS', tasks, todolistId
     } as const),
-    addTaskSuccess: (todolistId: string, newTask: TaskType) => ({type: 'ADD_TASK_SUCCESS', todolistId, newTask} as const),
+    addTaskSuccess: (todolistId: string, newTask: TaskType) => ({
+        type: 'ADD_TASK_SUCCESS',
+        todolistId,
+        newTask
+    } as const),
     changeTaskSuccess: (todolistId: string, taskId: string, updatedTask: TaskType) => ({
         type: 'CHANGE_TASK_SUCCESS', todolistId, taskId, updatedTask
     } as const),
@@ -166,7 +174,10 @@ export const todoActions = {
     } as const),
     isFetchingSuccess: (isFetching: boolean) => ({type: 'IS_FETCHING_SUCCESS', isFetching} as const),
     isErrorMessageSuccess: (errorMessage: string) => ({type: 'IS_ERROR_MESSAGE_SUCCESS', errorMessage} as const),
-    filterErrorMessagesSuccess: (errorMessage: string) => ({type: 'FILTER_ERROR_MESSAGE_SUCCESS', errorMessage} as const),
+    filterErrorMessagesSuccess: (errorMessage: string) => ({
+        type: 'FILTER_ERROR_MESSAGE_SUCCESS',
+        errorMessage
+    } as const),
     deleteErrorMessagesSuccess: () => ({type: 'DELETE_ERROR_MESSAGES_SUCCESS'} as const)
 }
 
@@ -177,6 +188,7 @@ export const setTodoLists = (): ThunkType => async (
     try {
         const todolists = await todoApi.getTodolists();
         await dispatch(todoActions.setTodolistsSuccess(todolists));
+        todolists.length === 0 && dispatch(todoActions.isFetchingSuccess(false));
     } catch (e) {
         dispatch(todoActions.isErrorMessageSuccess(e.response.data.message));
     }
